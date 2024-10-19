@@ -18,6 +18,7 @@ class Post(models.Model):
         - author (User): The author of the post.
 
         - tags (TaggableManager): The tags associated with the post.
+        - publishes (PostManager): The custom manager for the Post model.
     """
 
     title = models.CharField(_("title"), max_length=255)
