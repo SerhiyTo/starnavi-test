@@ -1,5 +1,6 @@
 from ninja_extra import NinjaExtraAPI
 
+from api.posts.api.post import PostController
 from api.users.api import AuthController, UserController
 
 api = NinjaExtraAPI(
@@ -11,4 +12,5 @@ api = NinjaExtraAPI(
 api.register_controllers(
     AuthController,
     UserController,
+    PostController,
 )

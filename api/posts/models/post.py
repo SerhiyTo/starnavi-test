@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from taggit.managers import TaggableManager
 
 from api.posts.models.manager import PostManager
 
@@ -14,10 +13,10 @@ class Post(models.Model):
         - content (str): The content of the post.
         - created_at (datetime): The date and time the post was created.
         - updated_at (datetime): The date and time the post was last updated.
-        - published (bool): Whether the post is published or not.
+        - is published (bool): Whether the post is published or not.
         - author (User): The author of the post.
+        - is_blocked (bool): Whether the post is blocked or not.
 
-        - tags (TaggableManager): The tags associated with the post.
         - publishes (PostManager): The custom manager for the Post model.
     """
 
@@ -25,11 +24,12 @@ class Post(models.Model):
     content = models.TextField(_("content"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("updated at"), auto_now=True)
-    published = models.BooleanField(_("published"), default=False)
     author = models.ForeignKey("users.User", related_name="posts", on_delete=models.CASCADE)
+    is_published = models.BooleanField(_("is published"), default=False)
+    is_blocked = models.BooleanField(_("is blocked"), default=False)
 
-    tags = TaggableManager()
-    publishes = PostManager()
+    objects = models.Manager()
+    published = PostManager()
 
     class Meta:
         verbose_name = _("Post")

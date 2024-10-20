@@ -1,6 +1,6 @@
 from ninja_extra import api_controller, route, status
-from ninja_jwt.controller import TokenObtainSlidingController
-from ninja_jwt.tokens import SlidingToken
+from ninja_jwt.controller import TokenObtainPairController
+from ninja_jwt.tokens import AccessToken
 
 from api.users.repositories import UserRepository
 from api.users.schemas import AuthSchema, TokenSchema
@@ -8,7 +8,7 @@ from api.users.services.auth_service import AuthService
 
 
 @api_controller("/auth", tags=["auth"])
-class AuthController(TokenObtainSlidingController):
+class AuthController(TokenObtainPairController):
     """
     Controller for authentication functionality.
 
@@ -29,5 +29,5 @@ class AuthController(TokenObtainSlidingController):
             email=user_data.email,
             password=user_data.password,
         )
-        token = SlidingToken.for_user(user)
+        token = AccessToken.for_user(user)
         return TokenSchema(token=str(token))

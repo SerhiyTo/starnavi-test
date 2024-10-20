@@ -15,4 +15,7 @@ class PostManager(models.Manager):
 
         :return: queryset of published posts.
         """
-        return super().get_queryset().filter(published=True)
+        return super().get_queryset().filter(
+            is_published=True,
+            is_blocked=False,
+        )
