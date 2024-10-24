@@ -1,9 +1,10 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from api.users.factories import UserFactory
 from api.users.schemas import UserResponseSchema
 
 
+@tag("schemas")
 class UserSchemaTest(TestCase):
     def test_user_schema(self):
         user = UserFactory()

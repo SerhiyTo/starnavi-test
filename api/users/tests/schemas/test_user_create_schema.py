@@ -5,7 +5,14 @@ from api.users.schemas import UserCreateSchema
 
 
 class UserCreateSchemaTest(TestCase):
+    """
+    Test the UserCreateSchema schema class.
+    """
+
     def test_user_create_schema(self):
+        """
+        Test the UserCreateSchema schema class.
+        """
         user = UserFactory()
         user_data = {
             "first_name": user.first_name,

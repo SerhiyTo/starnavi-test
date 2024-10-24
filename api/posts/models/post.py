@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from api.posts.models.manager import PostManager
+from api.services.profanity_service import ProfanityFilter
 
 
 class Post(models.Model):
@@ -38,3 +39,29 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(
+        self,
+        *args,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
+    ):
+        """
+        Save the post.
+
+        Args:
+            - args: The positional arguments.
+            - force_insert (bool): Whether to force an insert operation.
+            - force_update (bool): Whether to force an update operation.
+            - using (str): The database alias.
+            - update_fields (list): The fields to update.
+        """
+
+        profanity_filter = ProfanityFilter()
+
+        if profanity_filter.is_profane(self.title) or profanity_filter.is_profane(self.content):
+            self.is_blocked = True
+
+        super().save(*args, force_insert, force_update, using, update_fields)

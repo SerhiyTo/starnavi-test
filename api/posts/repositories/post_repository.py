@@ -1,8 +1,8 @@
 from asgiref.sync import sync_to_async
-from ninja_extra.exceptions import PermissionDenied
 
 from api.posts.models import Post
 from api.posts.repositories.post_base import PostBaseRepository
+from api.services import UserService
 
 
 class PostRepository(PostBaseRepository):
@@ -24,6 +24,13 @@ class PostRepository(PostBaseRepository):
         :param author_id: user ID.
         :return: created post.
         """
+
+        if not post.get("title"):
+            raise ValueError("The Title must be set")
+
+        if not post.get("content"):
+            raise ValueError("The Content must be set")
+
         return await Post.objects.acreate(author_id=author_id, **post)
 
     async def get_all_published(self) -> list[Post]:
@@ -52,9 +59,19 @@ class PostRepository(PostBaseRepository):
         :param author_id: user ID.
         :return: updated post.
         """
+
+        if not post.get("title"):
+            raise ValueError("The Title must be set")
+
+        if not post.get("content"):
+            raise ValueError("The Content must be set")
+
+        user_service = UserService()
         post_to_update = await self.get_by_id(post_id)
-        self._check_author(post_to_update, author_id)
+
+        await user_service.check_author_permission(post_to_update.author_id, author_id)
         await Post.objects.filter(pk=post_id).aupdate(**post)
+
         return await self.get_by_id(post_id)
 
     async def delete(self, post_id: int, author_id: int) -> Post:
@@ -65,18 +82,12 @@ class PostRepository(PostBaseRepository):
         :param author_id: user ID.
         :return: deleted post.
         """
+        user_service = UserService()
         post_to_delete = await self.get_by_id(post_id)
-        self._check_author(post_to_delete, author_id)
+
+        await user_service.check_author_permission(
+            obj_author_id=post_to_delete.author_id,
+            author_id=author_id,
+        )
+
         return await post_to_delete.adelete()
-
-    @staticmethod
-    def _check_author(post: Post, author_id: int) -> None:
-        """
-        Check if the author of the post is the same as the given user ID.
-
-        :param post: post object.
-        :param author_id: author ID.
-        :return: None.
-        """
-        if post.author_id != author_id:
-            raise PermissionDenied("You are not the author of this post.")

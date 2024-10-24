@@ -1,11 +1,12 @@
 from asgiref.sync import sync_to_async
-from django.test import TestCase
+from django.test import TestCase, tag
 from ninja_extra.testing import TestAsyncClient
 
 from api.users.api import UserController
 from api.users.factories import UserFactory
 
 
+@tag("api")
 class UserControllerTestCase(TestCase):
     async def test_register(self):
         client = TestAsyncClient(UserController)

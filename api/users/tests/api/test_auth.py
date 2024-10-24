@@ -1,11 +1,12 @@
 from asgiref.sync import sync_to_async
-from django.test import TestCase
+from django.test import TestCase, tag
 from ninja_extra.testing import TestAsyncClient
 
 from api.users.api import AuthController
 from api.users.factories import UserFactory
 
 
+@tag("api")
 class TestAuthController(TestCase):
     async def test_login_success(self):
         await sync_to_async(UserFactory)(

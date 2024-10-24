@@ -1,7 +1,8 @@
 from ninja_extra import NinjaExtraAPI
 
-from api.posts.api.post import PostController
 from api.users.api import AuthController, UserController
+from api.posts.api import PostController
+from api.comments.api import CommentController, AnalyticsController
 
 api = NinjaExtraAPI(
     title="Starnavi Test API",
@@ -13,4 +14,6 @@ api.register_controllers(
     AuthController,
     UserController,
     PostController,
+    CommentController,
+    AnalyticsController,
 )

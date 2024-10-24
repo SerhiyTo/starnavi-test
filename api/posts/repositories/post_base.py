@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from api.posts.models import Post
 
@@ -19,7 +20,7 @@ class PostBaseRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all_published(self) -> list[Post]:
+    async def get_all_published(self) -> List[Post]:
         raise NotImplementedError
 
     @abstractmethod
